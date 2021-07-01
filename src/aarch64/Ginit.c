@@ -322,8 +322,10 @@ access_mem (unw_addr_space_t as, unw_word_t addr, unw_word_t *val, int write,
 {
   if (unlikely (write))
     {
-      Debug (16, "mem[%lx] <- %lx\n", addr, *val);
-      *(unw_word_t *) addr = *val;
+      if (val != NULL) {
+         Debug (16, "mem[%lx] <- %lx\n", addr, *val);
+         addr = *val;
+      }
     }
   else
     {
@@ -334,8 +336,11 @@ access_mem (unw_addr_space_t as, unw_word_t addr, unw_word_t *val, int write,
         Debug (16, "mem[%016lx] -> invalid\n", addr);
         return -1;
       }
-      *val = *(unw_word_t *) addr;
-      Debug (16, "mem[%lx] -> %lx\n", addr, *val);
+     if (val != NULL) {
+       *val = addr;
+       Debug (16, "mem[%lx] -> %lx\n", addr, *val);
+     }
+
     }
   return 0;
 }
